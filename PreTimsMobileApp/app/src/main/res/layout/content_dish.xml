@@ -17,4 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listDish_recyclerView" />
+
+    <TextView
+        android:text="IMPOSSIBLE DE SE CONNECTER AU SERVEUR"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/error_textView"
+        android:textSize="24sp" />
 </RelativeLayout>

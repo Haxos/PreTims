@@ -14,11 +14,14 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -139,29 +142,47 @@ public class DishActivity extends AppCompatActivity {
                 //get JSON and convert to Json Object from Gson
                 String jsonString = response.body().string();
                 Log.i("Request list dish", jsonString);
-                JsonParser jsonParser = new JsonParser();
-                //JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
-                JsonArray jsonArray = (JsonArray) jsonParser.parse(jsonString);
 
-                for(int i = 0; i < Integer.parseInt(response.header("NumberDishies")); i++)
+                //if the serveur is connected then it display the list
+                try
                 {
-                    JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                    JsonParser jsonParser = new JsonParser();
+                    //JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+                    JsonArray jsonArray = (JsonArray) jsonParser.parse(jsonString);
 
-                    //get image
-                    byte[] decodedImage = Base64.decode(jsonObject.get("disImage").toString(), Base64.DEFAULT);
-                    Bitmap image = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
+                    for(int i = 0; i < Integer.parseInt(response.header("NumberDishies")); i++) {
+                        JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
 
-                    //set class dish
-                    Dish dish = new Dish(
-                            jsonObject.get("idDish").getAsString(),
-                            jsonObject.get("disName").getAsString(),
-                            jsonObject.get("disComposition").getAsString(),
-                            jsonObject.get("disDescription").getAsString(),
-                            image
-                    );
-                    dishList.add(dish);
+                        //get image
+                        byte[] decodedImage = Base64.decode(jsonObject.get("disImage").toString(), Base64.DEFAULT);
+                        Bitmap image = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
 
-                    displayList();
+                        //set class dish
+                        Dish dish = new Dish(
+                                jsonObject.get("idDish").getAsString(),
+                                jsonObject.get("disName").getAsString(),
+                                jsonObject.get("disComposition").getAsString(),
+                                jsonObject.get("disDescription").getAsString(),
+                                image
+                        );
+                        dishList.add(dish);
+
+                        //the error message go invisible
+                        final TextView textView = (TextView) findViewById(R.id.error_textView);
+                        textView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                textView.setVisibility(View.GONE);
+                            }
+                        });
+
+                        //display the list
+                        displayList();
+                    }
+                }
+                catch(JsonSyntaxException e)
+                {
+                    //
                 }
 
             }
