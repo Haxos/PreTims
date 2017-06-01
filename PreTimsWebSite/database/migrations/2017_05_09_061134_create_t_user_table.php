@@ -23,7 +23,7 @@ class CreateTUserTable extends Migration
       {
         //create fields
         $table->increments('idUser');
-        $table->string('useLogin');
+        $table->string('useLogin')->unique();
         $table->string('useName');
         $table->string('useFirstName');
         $table->string('useEmail')->unique();

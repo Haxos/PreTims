@@ -4,6 +4,8 @@
     tools:context="com.tims.pretims.DishActivity">
     <item android:title="@string/action_login"
         android:id="@+id/login_menuItem" />
+    <item android:title="@string/action_logout"
+        android:id="@+id/logout_menuItem" />
     <item android:title="@string/action_history"
         android:id="@+id/history_menuItem" />
     <item

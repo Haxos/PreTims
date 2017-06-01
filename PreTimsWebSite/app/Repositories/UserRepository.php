@@ -29,6 +29,11 @@ class UserRepository
     return $this->user->findOrFail($id);
   }
 
+  public function getByLogin($login)
+  {
+    return $this->user->where('useLogin', $login)->first();
+  }
+
   public function getAll()
   {
     return $this->user->all();

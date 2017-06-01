@@ -50,6 +50,7 @@ public class DishActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
+        MenuNavBar.setConnectionVisibility(menu, this);
         return true;
     }
 
@@ -60,31 +61,22 @@ public class DishActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.login_menuItem)
+        if (MenuNavBar.checkItemSelected(this, id))
         {
-            return true;
-        }
-        else if (id == R.id.history_menuItem)
-        {
-            return true;
-        }
-        else if (id == R.id.settings_menuItem)
-        {
-            return true;
+            finish();
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
+        //return super.onOptionsItemSelected(item);
+
     }
 
+    /**
+     * Create the dish list and display it
+     */
     private void createDishList()
     {
         dishList = new ArrayList();
-
-//        for(int i = 0; i < 20; i++)
-//        {
-//            dishList.add(new Dish(Integer.toString(i), "Plat n° "+i, "kjhsdbdfsbsdfjhbdfsjhbjsdhfbjhbdfs", "fejhuzedbuvuvsdusbdvdsvbudvsjkbfdvjkfdjkfdjkfdbsbdfnfdbsbfsdbbhfdbshfdsvbknjkasdjknsdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajknsdackjnsdacnkknjdasnsdacknjdscaknkdnsajknsdankjdnkjdsankjdsnkjjkndasnjkdasc", null));
-//        }
 
         //create the request
         Request request = new Request.Builder()
@@ -94,6 +86,9 @@ public class DishActivity extends AppCompatActivity {
         sendRequest(request);
     }
 
+    /**
+     * Display the list
+     */
     private void displayList()
     {
         final Context thisContext = this;
@@ -120,6 +115,10 @@ public class DishActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Send the request for getting the dish's list
+     * @param request => Request to send
+     */
     private void sendRequest(Request request)
     {
         OkHttpClient client = new OkHttpClient();
@@ -165,11 +164,14 @@ public class DishActivity extends AppCompatActivity {
                     displayList();
                 }
 
-
             }
         });
     }
 
+    /**
+     * Start the activity for displaying the detail of a dish
+     * @param dish => Datas of the dish
+     */
     private void startDetailsActivity(Dish dish)
     {
         Intent intent = new Intent(DishActivity.this, DetailDishActivity.class);
@@ -188,8 +190,8 @@ public class DishActivity extends AppCompatActivity {
 
     /**
      * Take from http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
-     * @param bitmapImage
-     * @return
+     * @param bitmapImage => Image to save
+     * @return => path to the saved image
      */
     private String saveToInternalStorage(Bitmap bitmapImage){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());

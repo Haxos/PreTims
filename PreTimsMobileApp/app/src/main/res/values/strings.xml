@@ -10,6 +10,21 @@
 
     <!-- Values for the menu -->
     <string name="action_login">Connexion</string>
+    <string name="action_logout">Déconnexion</string>
     <string name="action_history">Historique</string>
     <string name="action_settings">Préférences</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_login">Login</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Connexion</string>
+    <string name="action_sign_in_short">Connexion</string>
+    <string name="error_invalid_login">Ce nom d\'utilisateur est invalide</string>
+    <string name="error_invalid_password">Ce mot de passe est trop court</string>
+    <string name="error_incorrect_password">Ce mot de passe est incorrect</string>
+    <string name="error_field_required">Ce champ est requis</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="rememberMe">Se souvenir</string>
 </resources>
