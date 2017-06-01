@@ -20,7 +20,7 @@ Description : content of the page that display the dishes
 			<table class="table">
 				<thead>
 					<tr>
-						<th>#</th>
+						<th>ID</th>
 						<th>Nom</th>
 						<!--<th></th>-->
 						<th></th>

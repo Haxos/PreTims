@@ -25,7 +25,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-inverse navbar-static-top nav-custom">
             <div class="container">
                 <div class="navbar-header">
 
@@ -78,11 +78,22 @@
                         @endif--}}
                         @if (Auth::check())
                         <ul class="nav navbar-nav navbar-right">
-                          <li>
+                          <li {{Request::is('dish*')||Request::is('/') ? 'class=active' : null}}>
                             {{ link_to_route("dish.index", "Plats", null,['class' => '']) }}
                           </li>
-                          <li>
+                          <li {{Request::is('user*') ? 'class=active' : null}}>
                             {{ link_to_route("user.index", "Utilisateurs", null,['class' => '']) }}
+                          </li>
+                          <li class="btn-danger">
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                                Deconnexion
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
                           </li>
                         </ul>
                         @endif
