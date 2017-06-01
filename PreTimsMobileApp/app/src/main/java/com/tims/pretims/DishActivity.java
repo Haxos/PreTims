@@ -1,14 +1,16 @@
 package com.tims.pretims;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,13 +96,28 @@ public class DishActivity extends AppCompatActivity {
 
     private void displayList()
     {
+        final Context thisContext = this;
+        DishItemFragment.OnListFragmentInteractionListener listener = new DishItemFragment.OnListFragmentInteractionListener() {
+            @Override
+            public void onListFragmentInteraction(Dish item) {
+                startDetailsActivity(item);
+            }
+        };
+
         //create the list to display
-        MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(dishList, null);
+        final DishItemRecyclerViewAdapter adapter = new DishItemRecyclerViewAdapter(dishList, listener);
 
         //display the list
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listDish_recyclerView);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listDish_recyclerView);
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(thisContext));
+            }
+        });
+
     }
 
     private void sendRequest(Request request)
@@ -120,8 +139,6 @@ public class DishActivity extends AppCompatActivity {
 
                 //get JSON and convert to Json Object from Gson
                 String jsonString = response.body().string();
-                //jsonString = jsonString.replace("[", "{");
-                //jsonString = jsonString.replace("]", "}");
                 Log.i("Request list dish", jsonString);
                 JsonParser jsonParser = new JsonParser();
                 //JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
@@ -130,12 +147,18 @@ public class DishActivity extends AppCompatActivity {
                 for(int i = 0; i < Integer.parseInt(response.header("NumberDishies")); i++)
                 {
                     JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+
+                    //get image
+                    byte[] decodedImage = Base64.decode(jsonObject.get("disImage").toString(), Base64.DEFAULT);
+                    Bitmap image = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
+
+                    //set class dish
                     Dish dish = new Dish(
                             jsonObject.get("idDish").getAsString(),
                             jsonObject.get("disName").getAsString(),
                             jsonObject.get("disComposition").getAsString(),
                             jsonObject.get("disDescription").getAsString(),
-                            null
+                            image
                     );
                     dishList.add(dish);
 
@@ -145,5 +168,50 @@ public class DishActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void startDetailsActivity(Dish dish)
+    {
+        Intent intent = new Intent(DishActivity.this, DetailDishActivity.class);
+
+        intent.putExtra("disId", dish.getId());
+        intent.putExtra("disName", dish.getName());
+        intent.putExtra("disComposition", dish.getComposition());
+        intent.putExtra("disDescription", dish.getDescription());
+        intent.putExtra("disImage", saveToInternalStorage( dish.getImage()));
+
+
+        startActivity(intent);
+
+        this.finish();
+    }
+
+    /**
+     * Take from http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
+     * @param bitmapImage
+     * @return
+     */
+    private String saveToInternalStorage(Bitmap bitmapImage){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir(AllConstants.NAME_DIRECTORY_DISH_IMAGE, Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory, AllConstants.NAME_FILE_DISH_IMAGE);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
     }
 }

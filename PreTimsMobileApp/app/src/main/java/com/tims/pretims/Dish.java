@@ -1,6 +1,8 @@
 package com.tims.pretims;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.Serializable;
 
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * Created by mayocartad on 18.05.2017.
  */
 
-public class Dish{
+public class Dish implements Serializable{
 
     //proprieties
     private String idDish;
@@ -18,11 +20,6 @@ public class Dish{
     private Bitmap disImage;
 
     //contructors
-    public Dish()
-    {
-
-    }
-
     public Dish(String id, String name, String composition, String description, Bitmap image)
     {
         idDish = id;
@@ -53,4 +50,45 @@ public class Dish{
     {
         return disImage;
     }
+
+//    @Override
+//    /**
+//     * Write the differents values to parcel
+//     */
+//    public void writeToParcel(Parcel dest, int flags)
+//    {
+//        dest.writeString(idDish);
+//        dest.writeString(disName);
+//        dest.writeString(disDescription);
+//        dest.writeString(disComposition);
+//        dest.writeValue(disImage);
+//    }
+//
+//    @Override
+//    public int describeContents()
+//    {
+//        //ignore
+//        return 0;
+//    }
+//
+//    private Dish(Parcel in)
+//    {
+//        idDish = in.readString();
+//        disName = in.readString();
+//        disDescription = in.readString();
+//        disComposition = in.readString();
+//        disImage = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+//    }
+//
+//    public static final Creator<Dish> CREATOR = new Creator<Dish>() {
+//        @Override
+//        public Dish createFromParcel(Parcel source) {
+//            return new Dish(source);
+//        }
+//
+//        @Override
+//        public Dish[] newArray(int size) {
+//            return new Dish[size];
+//        }
+//    };
 }

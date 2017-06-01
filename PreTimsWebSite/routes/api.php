@@ -18,3 +18,4 @@ use Illuminate\Http\Request;
 });*/
 
 Route::resource('dish', 'Api\DishController');
+Route::post('login', 'Auth\LoginController@authentificateWithJWT');

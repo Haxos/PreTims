@@ -11,6 +11,7 @@ use App\Models\Dish;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
+//use Illuminate\Support\Facades\File;
 
 class DishRepository
 {
@@ -57,6 +58,12 @@ class DishRepository
       $nbReservationPerName[$dish->disName] = $dish->client->count();
     }
     return $nbReservationPerName;
+  }
+
+  public function getImage($imageName)
+  {
+    $image = Storage::disk('images')->get($imageName);
+    return $imageEncoded = base64_encode($image);
   }
 
   private function putNewImage($image)
