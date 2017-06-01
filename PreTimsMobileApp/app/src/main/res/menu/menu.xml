@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.tims.pretims.DishActivity">
+    <item android:title="@string/action_login"
+        android:id="@+id/login_menuItem" />
+    <item android:title="@string/action_history"
+        android:id="@+id/history_menuItem" />
+    <item
+        android:id="@+id/settings_menuItem"
+        android:orderInCategory="100"
+        android:title="@string/action_settings" />
+</menu>

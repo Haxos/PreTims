@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">PreTims</string>
+    
+    <!-- Values for the titles -->
+    <string name="title_list">Liste des plats</string>
+    <string name="title_details_dish">Détail</string>
+    <string name="title_login">Connexion</string>
+    <string name="title_history">Historique</string>
+    <string name="title_settings">Préférences</string>
+
+    <!-- Values for the menu -->
+    <string name="action_login">Connexion</string>
+    <string name="action_history">Historique</string>
+    <string name="action_settings">Préférences</string>
+</resources>
