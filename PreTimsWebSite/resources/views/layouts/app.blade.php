@@ -107,7 +107,7 @@
     <footer class="navbar navbar-fixed-bottom navbar-inverse">
       <div class="container">
         <div style="color:white" class="col-xs-offset-4 col-xs-4">
-        <p >
+        <p>
           © Tims 2017
         </p>
         <p>

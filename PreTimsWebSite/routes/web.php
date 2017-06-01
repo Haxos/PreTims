@@ -26,9 +26,9 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth'], function(){
-  Route::get('/', 'DishController@index');
-  Route::resource('dish', 'DishController');
-  Route::resource('user', 'UserController');
+  Route::get('/', 'Web\DishController@index');
+  Route::resource('dish', 'Web\DishController');
+  Route::resource('user', 'Web\UserController');
 });
 
 //Auth::routes();

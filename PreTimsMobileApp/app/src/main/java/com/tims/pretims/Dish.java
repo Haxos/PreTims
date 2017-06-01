@@ -2,11 +2,13 @@ package com.tims.pretims;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by mayocartad on 18.05.2017.
  */
 
-public class Dish {
+public class Dish{
 
     //proprieties
     private String idDish;
@@ -16,6 +18,11 @@ public class Dish {
     private Bitmap disImage;
 
     //contructors
+    public Dish()
+    {
+
+    }
+
     public Dish(String id, String name, String composition, String description, Bitmap image)
     {
         idDish = id;
