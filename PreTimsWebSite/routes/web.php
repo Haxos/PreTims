@@ -1,4 +1,11 @@
 <?php
+/*
+ * ETML
+ * Auteur : Adrian MAYO CARTES
+ * Date : 09.05.2017
+ * Description : Will return, depending of the CRUD verb used and the URL address,
+ *    the corrects values from the corresponding method from the controllers
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +22,7 @@
     return view('welcome');
 });*/
 
-Route::get('/', function () {
-    return view('template');
-});
+Route::get('/', 'DishController@index');
 
 Route::resource('dish', 'DishController');
 Route::resource('user', 'UserController');
