@@ -3,9 +3,9 @@ Auteur : Adrian MAYO CARTES
 Date : 09.05.2017
 Description : content of the page that display the users
 -->
-@extends('template')
+@extends('layouts.app')
 
-@section('contenu')
+@section('content')
     <br>
     <div class="col-sm-offset-3 col-sm-6">
     @if(session()->has('ok'))
@@ -36,7 +36,7 @@ Description : content of the page that display the users
 							<td>{{ link_to_route('user.edit', 'Modifier', [$user->idUser], ['class' => 'btn btn-warning btn-block']) }}</td>
 							<td>
 								{{ Form::open(['method' => 'DELETE', 'route' => ['user.destroy', $user->idUser]]) }}
-									{{ Form::submit('Supprimer', ['class' => 'btn btn-danger btn-block', 'onclick' => 'return confirm(\'Vraiment supprimer ce plat ?\')']) }}
+									{{ Form::submit('Supprimer', ['class' => 'btn btn-danger btn-block', 'onclick' => 'return confirm(\'Vraiment supprimer cet utilisateur ?\')']) }}
 								{{ Form::close() }}
 							</td>
 						</tr>

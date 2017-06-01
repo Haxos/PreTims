@@ -21,8 +21,16 @@
 /*Route::get('/', function () {
     return view('welcome');
 });*/
+Route::get('/login', 'Auth\LoginController@showLoginForm');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
+Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/', 'DishController@index');
+Route::group(['middleware' => 'auth'], function(){
+  Route::get('/', 'DishController@index');
+  Route::resource('dish', 'DishController');
+  Route::resource('user', 'UserController');
+});
 
-Route::resource('dish', 'DishController');
-Route::resource('user', 'UserController');
+//Auth::routes();
+
+//Route::get('/home', 'HomeController@index')->name('home');

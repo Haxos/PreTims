@@ -3,9 +3,9 @@ Auteur : Adrian MAYO CARTES
 Date : 09.05.2017
 Description : content of the page that display the dishes
 -->
-@extends('template')
+@extends('layouts.app')
 
-@section('contenu')
+@section('content')
     <br>
     <div class="col-sm-offset-3 col-sm-6">
     @if(session()->has('ok'))

@@ -25,7 +25,7 @@ class CreateTUserTable extends Migration
         $table->increments('idUser');
         $table->string('useLogin');
         $table->string('useName');
-        $table->string('useFisrtName');
+        $table->string('useFirstName');
         $table->string('useEmail')->unique();
         $table->string('password');
         $table->integer('usePrivilege')->default(0);

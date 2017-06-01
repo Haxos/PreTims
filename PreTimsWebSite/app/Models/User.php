@@ -17,7 +17,7 @@ class User extends Authenticatable
 
     protected $table = 't_user';
     protected $primaryKey = 'idUser';
-    protected $fillable = ['useName', 'useFirstName', 'useEmail', 'password', 'useRight'];
+    protected $fillable = ['useLogin', 'useName', 'useFirstName', 'useEmail', 'password', 'usePrivilege'];
     protected $hidden = ['password', 'remember_token'];
 
     public function dish()
