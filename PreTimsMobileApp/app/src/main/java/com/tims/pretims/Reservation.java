@@ -7,11 +7,16 @@ package com.tims.pretims;
 public class Reservation {
 
     //proprieties
-    private String idReservation;
-    private String resDishName;
-    private String resDate;
+    private String idReservation = null;
+    private String resDishName = null;
+    private String resDate = null;
 
     //contructors
+    public Reservation()
+    {
+
+    }
+
     public Reservation(String id, String dishName, String date)
     {
         idReservation = id;
@@ -31,5 +36,19 @@ public class Reservation {
     public String getDate()
     {
         return resDate;
+    }
+
+    //set the different proprieties
+    public void setId(String reservation)
+    {
+        this.idReservation = reservation;
+    }
+    public void setDishName(String dishName)
+    {
+        this.resDishName = dishName;
+    }
+    public void setDate(String date)
+    {
+        this.resDate = date;
     }
 }

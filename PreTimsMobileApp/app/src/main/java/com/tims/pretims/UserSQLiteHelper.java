@@ -19,7 +19,7 @@ public class UserSQLiteHelper extends SQLiteOpenHelper
 
 
     // Commande sql pour la création de la base de données
-    private static final String DATABASE_CREATE = "create table "+ TABLE_USER
+    public static final String TABLE_CREATE = "create table "+ TABLE_USER
             + "("
             + ID + " integer primary key autoincrement, "
             + COLUMN_LOGIN + " varchar null,"
@@ -33,7 +33,8 @@ public class UserSQLiteHelper extends SQLiteOpenHelper
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        database.execSQL(DATABASE_CREATE);
+        database.execSQL(TABLE_CREATE);
+        database.execSQL(ReservationSQLiteHelper.TABLE_CREATE);
     }
 
     @Override

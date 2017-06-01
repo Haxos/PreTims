@@ -17,7 +17,7 @@ public class ReservationSQLiteHelper extends SQLiteOpenHelper {
 
 
     // Commande sql pour la création de la base de données
-    private static final String DATABASE_CREATE = "create table "+ TABLE_RESERVATION
+    public static final String TABLE_CREATE = "create table "+ TABLE_RESERVATION
             + "("
             + ID + " integer primary key autoincrement, "
             + COLUMN_DISH_NAME + " varchar null,"
@@ -30,7 +30,8 @@ public class ReservationSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        database.execSQL(DATABASE_CREATE);
+        database.execSQL(TABLE_CREATE);
+        database.execSQL(UserSQLiteHelper.TABLE_CREATE);
     }
 
     @Override

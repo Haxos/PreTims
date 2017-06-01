@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,9 @@ public class DetailDishActivity extends AppCompatActivity {
 
     private Dish dish = null;
     private UserDataSource userDatabase;
+    private ReservationDataSource reservationDataSource;
     private Button reservationButton;
+    private Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +61,51 @@ public class DetailDishActivity extends AppCompatActivity {
         userDatabase = new UserDataSource(this);
         userDatabase.open();
 
+        //if the reservation for this date exists then it doesn't display
+        //unless it's this dish that is reserved then it display a cancel ("annuler") button
+        reservationDataSource = new ReservationDataSource(this);
+        reservationDataSource.open();
+        Reservation reservation = reservationDataSource.getLastReservation();
+
+        //get today date
+        Calendar calendar = Calendar.getInstance();
+        String todayDate = getDateInYearMonthDayFormat(calendar);
+
+        //get reservation date and name of the dish
+        String reservationDate = reservation.getDate();
+        String reservedDishName = reservation.getDishName();
+
         reservationButton = (Button) findViewById(R.id.reservation_button);
-        if(userDatabase.getLastToken() != null)
+        cancelButton = (Button) findViewById(R.id.cancel_button);
+
+
+        if(userDatabase.getLastToken() != null
+                && !todayDate.equals(reservationDate)
+            )
         {
+            //display reservation button
             reservationButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.GONE);
+        }
+        else if(userDatabase.getLastToken() != null
+                && todayDate.equals(reservationDate)
+                && dish.getName().equals(reservedDishName)
+                )
+        {
+            //display cancel button
+            reservationButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.VISIBLE);
+
         }
         else
         {
+            //display none of the buttons
             reservationButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
         }
 
         userDatabase.close();
+        reservationDataSource.close();
     }
 
     /**
@@ -135,13 +172,74 @@ public class DetailDishActivity extends AppCompatActivity {
                 if(response.code() == 200)
                 {
                     Log.i("Request reservation", "No problem");
+                    Calendar calendar = Calendar.getInstance();
+                    String date = getDateInYearMonthDayFormat(calendar);
 
+                    Log.i("Date", date);
+
+                    reservationDataSource.open();
+                    reservationDataSource.createReservation(dish.getName(), date);
+                    reservationDataSource.close();
 
                     returnToMainActivity();
                 }
                 else
                 {
                     Log.e("Request reservation", "A problem occured during the reservation");
+                }
+            }
+        });
+    }
+
+    public void cancelReservation(View v)
+    {
+        Gson gson = new Gson();
+        userDatabase.open();
+        String login = userDatabase.getLastUser().getLogin();
+        userDatabase.close();
+
+        reservationDataSource.open();
+        String date = reservationDataSource.getLastReservation().getDate();
+        reservationDataSource.close();
+
+        //create the associative table
+        final Map<String, String> values = new HashMap<String, String>();
+        values.put("idDish", dish.getId());
+        values.put("useLogin", login);
+        values.put("date", date);
+
+        //convert the associative table to a json
+        String body = gson.toJson(values);
+
+        Request request = new Request.Builder()
+                .url(AllConstants.DELETE_RESERVATION)
+                .put(RequestBody.create(AllConstants.MEDIA_TYPE_MARKDOWN, body))
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+
+        client.newCall(request).enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                Log.e("Request reservation", "Unable to get the response from the server");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                if(response.code() == 200)
+                {
+                    reservationDataSource.open();
+                    reservationDataSource.deleteLastReservation();
+                    reservationDataSource.close();
+
+                    returnToMainActivity();
+                }
+                else
+                {
+                    Log.e("Request reservation", "A problem occured during the cancellation of the reservation");
                 }
             }
         });
@@ -202,5 +300,14 @@ public class DetailDishActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DishActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private String getDateInYearMonthDayFormat(Calendar calendar)
+    {
+        String date = String.valueOf(calendar.get(Calendar.YEAR));
+        date += "-"+String.valueOf(calendar.get(Calendar.MONTH)+1); //the month begin at 0 !
+        date += "-"+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+        return date;
     }
 }

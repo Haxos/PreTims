@@ -15,7 +15,8 @@ public class ReservationDataSource {
     private ReservationSQLiteHelper dbHelper;
     private String [] columns = {
             ReservationSQLiteHelper.ID,
-            ReservationSQLiteHelper.COLUMN_DISH_NAME
+            ReservationSQLiteHelper.COLUMN_DISH_NAME,
+            ReservationSQLiteHelper.COLUMN_DATE
     };
 
     public ReservationDataSource(Context context)
@@ -33,57 +34,70 @@ public class ReservationDataSource {
         dbHelper.close();
     }
 
-    public void createReservation()
+    public Reservation createReservation(String dishName, String date)
     {
+        ContentValues values = new ContentValues();
 
+        values.put(ReservationSQLiteHelper.COLUMN_DISH_NAME, dishName);
+        values.put(ReservationSQLiteHelper.COLUMN_DATE, date);
+
+        long insertId = database.insert(ReservationSQLiteHelper.TABLE_RESERVATION, null, values);
+
+        Cursor cursor = database.query(
+                ReservationSQLiteHelper.TABLE_RESERVATION, // String : nom de la table
+                columns, //String[] : liste des colonnes à retourner
+                ReservationSQLiteHelper.ID + " = " + insertId, // String : clauses "WHERE"
+                null, //String[] : selectionArgs
+                null, //String[] : groupBy
+                null, //String[] : having
+                null); //String[] : orderBy
+
+        cursor.moveToFirst();
+        Reservation newReservation = cursorToReservation(cursor);
+        cursor.close();
+        return newReservation;
     }
 
-    public User getLastUser()
+    public Reservation getLastReservation()
     {
-        User user = null;
+        Reservation reservation = new Reservation();
 
-        Cursor cursor = database.query(UserSQLiteHelper.TABLE_USER,
+        Cursor cursor = database.query(ReservationSQLiteHelper.TABLE_RESERVATION,
                 columns, null, null, null, null, null);
 
         if(cursor.getCount() != 0)
         {
-            //get user
+            //get reservation
             cursor.moveToLast();
-            user = cursorToUser(cursor);
+            reservation = cursorToReservation(cursor);
             cursor.close();
         }
-        return user;
+        return reservation;
     }
 
-    private void modifyUser(int id, ContentValues values)
+//    private void modifyUser(int id, ContentValues values)
+//    {
+//        database.update(UserSQLiteHelper.TABLE_USER, values, UserSQLiteHelper.ID+" = "+ id, null);
+//    }
+
+    public void deleteLastReservation()
     {
-        database.update(UserSQLiteHelper.TABLE_USER, values, UserSQLiteHelper.ID+" = "+ id, null);
+        Reservation reservation = getLastReservation();
+
+        database.delete(ReservationSQLiteHelper.TABLE_RESERVATION, //table name
+                ReservationSQLiteHelper.ID + "=" + reservation.getId(), //Where clause
+                null    //args[]
+        );
     }
 
-    public void deleteLastToken()
+    private Reservation cursorToReservation(Cursor cursor)
     {
-        User user = getLastUser();
-        user.setToken(null);
+        Reservation reservation = new Reservation();
 
-        //create the values
-        ContentValues values = new ContentValues();
-        values.put(UserSQLiteHelper.COLUMN_LOGIN, user.getLogin());
-        values.put(UserSQLiteHelper.COLUMN_PASSWORD, user.getPassword());
-        values.put(UserSQLiteHelper.COLUMN_TOKEN, user.getToken());
+        reservation.setId(cursor.getString(0));
+        reservation.setDishName(cursor.getString(1));
+        reservation.setDate(cursor.getString(2));
 
-        modifyUser(user.getId(), values);
-
-    }
-
-    private User cursorToUser(Cursor cursor)
-    {
-        User user = new User();
-
-        user.setId(cursor.getInt(0));
-        user.setLogin(cursor.getString(1));
-        user.setPassword(cursor.getString(2));
-        user.setToken(cursor.getString(3));
-
-        return user;
+        return reservation;
     }
 }
