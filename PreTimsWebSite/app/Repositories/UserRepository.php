@@ -33,12 +33,12 @@ class UserRepository
     return $this->user->all();
   }
 
-  public function store($inputs)
+  public function store($request)
   {
     return $this->user->create($inputs);
   }
 
-  public function update($id, Array $inputs)
+  public function update($request, $id)
   {
     $this->getById($id)->update($inputs);
   }

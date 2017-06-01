@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+<!--
+Auteur : Adrian MAYO CARTES
+Date : 09.05.2017
+Description : template that will be used in all the pages. This template is
+  is inspired by the template used on the OpenClassrooms's tutorial of Laravel
+-->
 <?php
 $navNames = ['Plats', 'Utilisateurs', 'Connexion', 'Deconnexion'];
  ?>
 <html lang="fr">
 	<head>
-    <!--
-    Auteur : Adrian MAYO CARTES
-    Date : 09.05.2017
-    Description : template that will be used in all the pages
-    -->
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
