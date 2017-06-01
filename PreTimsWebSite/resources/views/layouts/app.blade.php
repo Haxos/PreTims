@@ -104,7 +104,18 @@
 
         @yield('content')
     </div>
-
+    <footer class="navbar navbar-fixed-bottom navbar-inverse">
+      <div class="container">
+        <div style="color:white" class="col-xs-offset-4 col-xs-4">
+        <p >
+          © Tims 2017
+        </p>
+        <p>
+          Made by Adrian MAYO CARTES
+        </p>
+      </div>
+      </div>
+    </footer>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
